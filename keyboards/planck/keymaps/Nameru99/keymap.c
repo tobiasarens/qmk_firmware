@@ -27,6 +27,8 @@ enum planck_layers {
   _RAISE, // raised based on qwerty
   _RAISE_Z, // raised based on qwertz
   _SHIFT_Y, // shift layer based on qwerty
+	_DVEROAK_CROMA, // special layout for croma questionnaires
+	_CROMA_NUMBERS, // special layout for croma questionnaires
   _ADJUST
 };
 
@@ -40,6 +42,7 @@ enum planck_keycodes {
 #define RAISE MO(_RAISE)
 #define RAISE_Z MO(_RAISE_Z)
 #define SHIFT_Y MO(_SHIFT_Y)
+#define CROMA_NUMBERS MO(_CROMA_NUMBERS)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -165,11 +168,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_planck_grid(
     _______, RESET,   DEBUG,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
-    _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, SDEFAULT,  DVORAK_Y,  DVORAK_Z,  _______,  _______,
+    _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, SDEFAULT,  DVORAK_Y,  DVORAK_Z,  DVORAK_CROMA,  _______,
     _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON, TERM_OFF, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______
+),
+	
+/* Dvorak -- croma fragebögen normal (qwertz base)
+ * ,-----------------------------------------------------------------------------------.
+ * | Tab  | [(ü) |   ,  |   .  |   P  | Y(Z) |   F  |   G  |   C  |   T  | Z(Y) | Bksp |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Esc  |   A  |   O  |   E  |   I  |   U  |   H  |   D  |   R  |   N  |   S  |  L   |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Shift| '(ä) |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  | ;(ö) |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | Ctrl | GUI  |  Alt |Lower |    Space    |RaiseZ| Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_DVORAK_CROMA] = LAYOUT_planck_grid(
+    KC_TAB,  KC_LBRC, KC_COMM, KC_DOT,  KC_P,    KC_Z,    KC_F,    KC_G,    KC_C,    KC_T,    KC_Y,    KC_BSPC,
+    KC_ESC,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,    KC_H,    KC_D,    KC_R,    KC_N,    KC_S,    KC_L,
+    KC_LSFT, KC_QUOT, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V, 	KC_SCLN,   KC_ENT ,
+    KC_LCTL, KC_LCTL, KC_LGUI, KC_LALT, CROMA_NUMBERS,   KC_SPC,  KC_SPC,  RAISE_Z,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+),
+
+	/* Dvorak -- croma fragebögen zahlen (qwertz base)
+		1		2		3	4		5		6		7	8		9		10	11		12
+	|		|		|		|		|		|		|		|		|		|		|		|		|
+ * ,-----------------------------------------------------------------------------------.
+ * | Tab  |      |   ,  |   ,  |      |       |      |   7  |   8  |   9  | 		 | Bksp |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Esc  |   A  |   B  |  C   |   D   |      |      |   4  |   5  |   6  |       |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Shift|   E§  |    F  |   G  |    H  |  I    |      |   1  |   2  |   3  |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | Ctrl | GUI  |  	 | 		 |    TAB    | 0 | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_CROMA_NUMBERS] = LAYOUT_planck_grid(
+    KC_TAB,  KC_LBRC, KC_COMM, KC_DOT,  KC_P,    KC_Z,    KC_F,    KC_G,    KC_C,    KC_T,    KC_Y,    KC_BSPC,
+    KC_ESC,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,    KC_H,    KC_D,    KC_R,    KC_N,    KC_S,    KC_L,
+    KC_LSFT, KC_QUOT, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V, 	KC_SCLN,   KC_ENT ,
+    KC_LCTL, KC_LCTL, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE_Z,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 )
 
+	
 };
 
 #ifdef AUDIO_ENABLE
@@ -202,6 +244,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+	  case DVORAK_CROMA:
+		  if(record->event.pressed) {
+			set_single_persistent_default_layer(_DVORAK_CROMA);  
+		  }
+		 return false;
+		 break;
   }
   return true;
 }

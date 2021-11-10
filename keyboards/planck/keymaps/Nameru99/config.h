@@ -1,13 +1,15 @@
 #pragma once
 
+
 #ifdef AUDIO_ENABLE
-    #define STARTUP_SONG SONG(PLANCK_SOUND)
+    #define STARTUP_SONG SONG(STARTUP_SOUND)
     // #define STARTUP_SONG SONG(NO_SOUND)
 
     #define DEFAULT_LAYER_SONGS { SONG(QWERTY_SOUND), \
                                   SONG(ODE_TO_JOY), \
                                   SONG(ROCK_A_BYE_BABY) \
                                 }
+    #define PITCH_STANDARD_A 220.0f
 #endif
 
 
@@ -25,7 +27,7 @@
    - MIDI notes can be sent when in Music mode is on
 */
 
-#define MIDI_BASIC
+//#define MIDI_BASIC
 
 /* enable advanced MIDI features:
    - MIDI notes can be added to the keymap
@@ -39,5 +41,5 @@
 //#define MIDI_TONE_KEYCODE_OCTAVES 2
 
 // Most tactile encoders have detents every 4 stages
-#define ENCODER_RESOLUTION 4
+//#define ENCODER_RESOLUTION 4
 
