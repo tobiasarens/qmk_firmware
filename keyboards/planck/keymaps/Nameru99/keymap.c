@@ -27,7 +27,7 @@ enum planck_layers {
   _RAISE, // raised based on qwerty
   _RAISE_Z, // raised based on qwertz
   _SHIFT_Y, // shift layer based on qwerty
-	_DVEROAK_CROMA, // special layout for croma questionnaires
+	_DVORAK_CROMA, // special layout for croma questionnaires
 	_CROMA_NUMBERS, // special layout for croma questionnaires
   _ADJUST
 };
@@ -35,7 +35,8 @@ enum planck_layers {
 enum planck_keycodes {
   SDEFAULT = SAFE_RANGE,
   DVORAK_Z,
-  DVORAK_Y
+  DVORAK_Y,
+	DVORAK_CROMA
 };
 
 #define LOWER MO(_LOWER)
@@ -150,7 +151,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE_Z] = LAYOUT_planck_grid(
     S(KC_EQL),  ALGR(KC_7),    ALGR(KC_8),    ALGR(KC_9),    ALGR(KC_0),    ALGR(KC_NUBS),    S(KC_1),    S(KC_7),    S(KC_5),    KC_GRV,    KC_SLSH,    KC_BSPC,
     KC_DEL,     ALGR(KC_Q),    S(KC_8),     S(KC_9),        S(KC_0),        S(KC_RBRC),   KC_RBRC,       KC_SLSH,    KC_BSLS,    S(KC_6),    ALGR(KC_RBRC),    S(KC_SLSH),
-    _______, S(KC_BSLS),  KC_NUBS,   S(KC_NUBS),   KC_MINS,  S(KC_MINS),  _______,  KC_HOME, KC_PGUP, KC_PGDN, KC_END, _______,
+    _______, S(KC_BSLS),  KC_NUBS,   S(KC_NUBS),   KC_MINS,  S(KC_MINS),  ALGR(KC_MINS),  KC_HOME, KC_PGUP, KC_PGDN, KC_END, _______,
     RAISE, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
 ),
 
@@ -159,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------------------------------------------------.
  * |      | Reset|Debug | RGB  |RGBMOD| HUE+ | HUE- | SAT+ | SAT- |BRGTH+|BRGTH-|  Del |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |MUSmod|Aud on|Audoff|AGnorm|AGswap|DEFAU.|DVOR_Y|DVOR_X|      |      |
+ * |      |      |MUSmod|Aud on|Audoff|AGnorm|AGswap|DEFAU.|DVOR_Y|DVOR_X|    DVORAKCROMA  |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |Voice-|Voice+|Mus on|Musoff|MIDIon|MIDIof|TermOn|TermOf|      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -168,7 +169,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_planck_grid(
     _______, RESET,   DEBUG,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
-    _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, SDEFAULT,  DVORAK_Y,  DVORAK_Z,  DVORAK_CROMA,  _______,
+    _______, _______, MU_MOD,  AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, SDEFAULT,  DF(_DVORAK_Y), DF(_DVORAK_Z),  DF(_DVORAK_CROMA),  _______,
     _______, MUV_DE,  MUV_IN,  MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  TERM_ON, TERM_OFF, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______
 ),
@@ -181,14 +182,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Shift| '(ä) |   Q  |   J  |   K  |   X  |   B  |   M  |   W  |   V  | ;(ö) |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Ctrl | Ctrl | GUI  |  Alt |Lower |    Space    |RaiseZ| Left | Down |  Up  |Right |
+ * | Ctrl | Ctrl | GUI  |  Alt |CROMA_NUMBERS |    Space    |RaiseZ| Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_DVORAK_CROMA] = LAYOUT_planck_grid(
     KC_TAB,  KC_LBRC, KC_COMM, KC_DOT,  KC_P,    KC_Z,    KC_F,    KC_G,    KC_C,    KC_T,    KC_Y,    KC_BSPC,
     KC_ESC,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,    KC_H,    KC_D,    KC_R,    KC_N,    KC_S,    KC_L,
     KC_LSFT, KC_QUOT, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V, 	KC_SCLN,   KC_ENT ,
-    KC_LCTL, KC_LCTL, KC_LGUI, KC_LALT, CROMA_NUMBERS,   KC_SPC,  KC_SPC,  RAISE_Z,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_LCTL, KC_LCTL, KC_LGUI, KC_LALT, MO(_CROMA_NUMBERS),   KC_SPC,  KC_SPC,  _______,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 	/* Dvorak -- croma fragebögen zahlen (qwertz base)
@@ -199,16 +200,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Esc  |   A  |   B  |  C   |   D   |      |      |   4  |   5  |   6  |       |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Shift|   E§  |    F  |   G  |    H  |  I    |      |   1  |   2  |   3  |      |Enter |
+ * | Shift|   E  |    F  |   G  |    H  |  I    |      |   1  |   2  |   3  |      |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * | Ctrl | Ctrl | GUI  |  	 | 		 |    TAB    | 0 | Left | Down |  Up  |Right |
  * `-----------------------------------------------------------------------------------'
  */
 [_CROMA_NUMBERS] = LAYOUT_planck_grid(
-    KC_TAB,  KC_LBRC, KC_COMM, KC_DOT,  KC_P,    KC_Z,    KC_F,    KC_G,    KC_C,    KC_T,    KC_Y,    KC_BSPC,
-    KC_ESC,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,    KC_H,    KC_D,    KC_R,    KC_N,    KC_S,    KC_L,
-    KC_LSFT, KC_QUOT, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V, 	KC_SCLN,   KC_ENT ,
-    KC_LCTL, KC_LCTL, KC_LGUI, KC_LALT, LOWER,   KC_SPC,  KC_SPC,  RAISE_Z,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    KC_TAB,  KC_DOT, KC_COMM, KC_COMM,  _______, _______,    _______,    KC_7,    KC_8,    KC_9,    _______,    KC_BSPC,
+    KC_ESC,  S(KC_A),   S( KC_B), 		 S(KC_C)   	,   S(KC_D),    _______,    _______,    KC_4,    KC_5,    KC_6,    _______,    _______,
+    KC_LSFT, S(KC_E), 		S(KC_F) ,    	S(KC_G),    S(KC_H),    S(KC_I), 		_______   ,  KC_1  ,    KC_2,    KC_3, 	_______,   KC_ENT ,
+    KC_LCTL, KC_LCTL, DF(_DVORAK_Z), _______ ,_______ , KC_TAB,  KC_TAB, KC_0 ,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 )
 
 	
@@ -230,26 +231,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         print("mode just switched to qwerty and this is a huge string\n");
         set_single_persistent_default_layer(_SDEFAULT);
       }
-      return false;
-      break;
-    case DVORAK_Y:
-      if (record->event.pressed) {
-        set_single_persistent_default_layer(_DVORAK_Y);
-      }
-      return false;
-      break;
-    case DVORAK_Z:
-      if (record->event.pressed) {
-        set_single_persistent_default_layer(_DVORAK_Z);
-      }
-      return false;
-      break;
-	  case DVORAK_CROMA:
-		  if(record->event.pressed) {
-			set_single_persistent_default_layer(_DVORAK_CROMA);  
-		  }
-		 return false;
-		 break;
   }
   return true;
 }
@@ -342,6 +323,10 @@ void matrix_scan_user(void) {
         }
     }
 #endif
+}
+
+void matrix_init_user(void) {
+        set_single_persistent_default_layer(_SDEFAULT);
 }
 
 bool music_mask_user(uint16_t keycode) {
